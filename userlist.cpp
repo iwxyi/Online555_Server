@@ -134,3 +134,28 @@ int UserList::getRank(QString userID)
         }
     return users.size();
 }
+
+QString UserList::getRanks()
+{
+    QString res = "";
+    int pre_i = 0, pre_r = 1;
+
+    qSort(users.begin(), users.end(), cmp); // 积分从大到小
+
+    for (int i = 0; i < users.size(); i++)
+    {
+        int r;
+        if (users.at(i).integral < pre_i)
+        {
+            pre_r = i+1;
+            res += "<R>" + QString("%1").arg(pre_r) + "</R><N>" + users.at(i).username + "</N><I>" + QString("%1").arg(users.at(i).integral) + "</I>";
+        }
+        else // 和上一个排名相同
+        {
+            res += "<R>" + QString("%1").arg(pre_r) + "</R><N>" + users.at(i).username + "</N><I>" + QString("%1").arg(users.at(i).integral) + "</I>";
+        }
+        pre_i = users.at(i).integral;
+    }
+
+    return res;
+}

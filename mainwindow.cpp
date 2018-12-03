@@ -181,6 +181,7 @@ void MainWindow::slotSwitchRecv(int id, QString str)
             {
                 QString res = makeXml("come", "KIND");
                 response(info, res);
+                info->getSocket()->waitForBytesWritten(100);
             }
         }
         else
@@ -209,6 +210,17 @@ void MainWindow::slotSwitchRecv(int id, QString str)
 
         int reverse = table_seat == 1 ? 2 : 1;
         if ( table_states[table_id][table_seat] == 2 && table_states[table_id][reverse] == 2) // 正在对战
+        {
+            SessionInfo* info = getInfo(table_id, reverse); // 对手
+            if (info != NULL)
+            {
+                QString res = makeXml("alone", "KIND");
+                response(info, res);
+            }
+            table_states[table_id][reverse] = 1; // 取消准备
+            log(QString("凭空获胜：%1,%2").arg(table_id).arg(reverse));
+        }
+        else if (table_states[table_id][reverse] > 0) // 有人
         {
             SessionInfo* info = getInfo(table_id, reverse); // 对手
             if (info != NULL)
@@ -376,6 +388,11 @@ void MainWindow::slotSwitchRecv(int id, QString str)
         }
 
         table_states[table_id][1] = table_states[table_id][2] = 1;
+    }
+    else if (kind == "rank")
+    {
+        QString res = u.getRanks();
+        response(id, "<KIND>rank</KIND>" + res);
     }
 }
 
@@ -549,6 +566,10 @@ void MainWindow::on_pushButton_clicked()
     int id = ui->lineEdit->text().toInt();
     int seat = ui->lineEdit_2->text().toInt();
     QString data = ui->lineEdit_3->text();
+    if (data == "") {
+        log(getAllTableStates());
+        return ;
+    }
     if (id == 0 || seat == 0 || data == "") return ;
     SessionInfo* si = getInfo(id, seat);
     if (seat != NULL)

@@ -36,6 +36,7 @@ public:
     QString getRandomUserID();
     int getIntegral(QString userID);
     int getRank(QString userID);
+    QString getRanks();
     QString add(QString n, QString p);
 
 private:

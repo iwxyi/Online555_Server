@@ -23,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     log(QString("读取用户数量：%1").arg(u.count()));
 
     connect(server, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
-
 }
 
 MainWindow::~MainWindow()
@@ -56,8 +55,7 @@ void MainWindow::slotNewConnection()
 }
 
 /**
- * 收到数据事件
- * 转发给处理函数
+ * 收到数据事件，转发给数据分析函数
  * @param id   Session ID
  * @param data 数据
  */
@@ -86,7 +84,7 @@ void MainWindow::slotDisconnect(int id)
 
 /**
  * 判断收到的数据
- * @param id  Session ID
+ * @param id  Session ID，用来回复的对象
  * @param str 收到的数据
  */
 void MainWindow::slotSwitchRecv(int id, QString str)
@@ -176,7 +174,7 @@ void MainWindow::slotSwitchRecv(int id, QString str)
                 response(si, res);
             }
 
-            SessionInfo* info = getInfo(table_id, reverse); // 对手
+            SessionInfo* info = getInfo(table_id, reverse); // 发给对手
             if (info != NULL)
             {
                 QString res = makeXml("come", "KIND");

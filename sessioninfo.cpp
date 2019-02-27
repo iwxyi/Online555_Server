@@ -60,15 +60,18 @@ int SessionInfo::getTableSeat()
     return table_seat;
 }
 
+/**
+ * 发送数据给该客户端
+ * @param  data 文本数据（XML）
+ * @return      是否成功
+ */
 bool SessionInfo::response(QString data)
 {
     char chars[1024] = {0};
     strcpy_s(chars, data.toStdString().c_str());
     if (!socket->isValid()) return false;
     int rst = socket->write(chars, strlen(chars));
-    if (rst == -1)
-        return false;
-    return true;
+    return (rst != -1);
 }
 
 QString SessionInfo::getUserID()

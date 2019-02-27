@@ -44,10 +44,10 @@ private:
 
 private:
     Ui::MainWindow *ui;
-    QTcpServer* server;
-    UserList u;
-    QList<SessionInfo*>infos;
-    int table_states[1000][3]; // 记录游戏桌是否有人的状态
+    QTcpServer* server;        // 通讯模块
+    UserList u;                // 所有用户信息类
+    QList<SessionInfo*>infos;  // 会话类列表
+    int table_states[1000][3]; // 记录游戏桌玩家和准备状态
 };
 
 #endif // MAINWINDOW_H
